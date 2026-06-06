@@ -1,0 +1,391 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   COASTAL SERENITY — Design Philosophy
+   Movement: Coastal Minimalism meets Cinematic Luxury
+   Color: Deep ocean indigo → warm amber sunset → soft ivory
+   Typography: Cormorant Garamond (display) + Jost (body)
+   Layout: Full-bleed snap-scroll, asymmetric text placement
+   Signature: Thin horizontal rules, italic serif headings,
+              translucent glass overlays, slow parallax
+   Animation: Slow, breath-like eases; nothing snappy
+   ============================================================ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.25rem;
+  --background: oklch(0.08 0.02 240);
+  --foreground: oklch(0.95 0.01 60);
+  --card: oklch(0.12 0.02 240);
+  --card-foreground: oklch(0.95 0.01 60);
+  --popover: oklch(0.12 0.02 240);
+  --popover-foreground: oklch(0.95 0.01 60);
+  --primary: oklch(0.78 0.08 55);
+  --primary-foreground: oklch(0.08 0.02 240);
+  --secondary: oklch(0.18 0.03 240);
+  --secondary-foreground: oklch(0.85 0.01 60);
+  --muted: oklch(0.15 0.02 240);
+  --muted-foreground: oklch(0.65 0.02 60);
+  --accent: oklch(0.72 0.1 200);
+  --accent-foreground: oklch(0.08 0.02 240);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.78 0.08 55);
+
+  /* Custom coastal tokens */
+  --sand: oklch(0.88 0.06 75);
+  --ocean-deep: oklch(0.22 0.08 230);
+  --ocean-mid: oklch(0.45 0.12 210);
+  --sunset-amber: oklch(0.78 0.14 55);
+  --sunset-rose: oklch(0.72 0.12 15);
+  --foam: oklch(0.96 0.01 200);
+  --glass-bg: oklch(0.08 0.02 240 / 40%);
+  --glass-border: oklch(1 0 0 / 15%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1280px;
+    }
+  }
+}
+
+/* ── Snap Scroll Container ─────────────────────────────── */
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Glass Card ────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--glass-border);
+}
+
+/* ── Thin Rule ─────────────────────────────────────────── */
+.thin-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--sunset-amber);
+  display: block;
+}
+
+/* ── Section BG ────────────────────────────────────────── */
+.section-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+/* ── Gradient overlays ─────────────────────────────────── */
+.overlay-dark {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    oklch(0.05 0.02 240 / 20%) 0%,
+    oklch(0.05 0.02 240 / 55%) 60%,
+    oklch(0.05 0.02 240 / 80%) 100%
+  );
+}
+.overlay-left {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    oklch(0.05 0.02 240 / 75%) 0%,
+    oklch(0.05 0.02 240 / 30%) 50%,
+    transparent 100%
+  );
+}
+.overlay-right {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to left,
+    oklch(0.05 0.02 240 / 75%) 0%,
+    oklch(0.05 0.02 240 / 30%) 50%,
+    transparent 100%
+  );
+}
+
+/* ── Wave SVG animation ────────────────────────────────── */
+@keyframes wave-drift {
+  0%   { transform: translateX(0) scaleY(1); }
+  50%  { transform: translateX(-3%) scaleY(1.04); }
+  100% { transform: translateX(0) scaleY(1); }
+}
+.wave-svg {
+  animation: wave-drift 8s ease-in-out infinite;
+}
+.wave-svg-2 {
+  animation: wave-drift 11s ease-in-out infinite reverse;
+  opacity: 0.6;
+}
+
+/* ── Scroll indicator ──────────────────────────────────── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%       { transform: translateY(8px); opacity: 1; }
+}
+.scroll-indicator {
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+/* ── Particle dots ─────────────────────────────────────── */
+@keyframes float-particle {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-120px) translateX(20px); opacity: 0; }
+}
+
+/* ── Sound toggle pulse ────────────────────────────────── */
+@keyframes sound-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.78 0.08 55 / 40%); }
+  50%       { box-shadow: 0 0 0 8px oklch(0.78 0.08 55 / 0%); }
+}
+.sound-active {
+  animation: sound-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── Nav dot ───────────────────────────────────────────── */
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: oklch(1 0 0 / 35%);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+}
+.nav-dot.active {
+  background: var(--sunset-amber);
+  width: 6px;
+  height: 20px;
+  border-radius: 3px;
+}
+
+/* ── Shimmer text ──────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    oklch(0.88 0.06 75) 0%,
+    oklch(0.96 0.01 200) 40%,
+    oklch(0.78 0.14 55) 60%,
+    oklch(0.88 0.06 75) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ── GSAP initial states ───────────────────────────────── */
+.gsap-fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.gsap-fade-left {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+.gsap-fade-right {
+  opacity: 0;
+  transform: translateX(40px);
+}
+.gsap-scale-in {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+/* ── Scrollbar hide ────────────────────────────────────── */
+.snap-container::-webkit-scrollbar {
+  display: none;
+}
+.snap-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Responsive Layout Overrides ───────────────────────── */
+.hero-brand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(to bottom, oklch(0.05 0.02 240 / 70%) 0%, transparent 100%);
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .hero-brand {
+    padding: 1.5rem 2.5rem;
+  }
+}
+
+.sound-toggle-btn {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: oklch(0.08 0.02 240 / 60%);
+  border: 1px solid oklch(1 0 0 / 20%);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, border-color 0.3s ease, bottom 0.3s ease, right 0.3s ease;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .sound-toggle-btn {
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.side-nav-dots {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  transition: right 0.3s ease;
+}
+@media (min-width: 768px) {
+  .side-nav-dots {
+    right: 2rem;
+  }
+}
+
+.wave-svg {
+  height: 45px;
+  display: block;
+  transition: height 0.3s ease;
+}
+.wave-svg-2 {
+  height: 35px;
+  display: block;
+  margin-top: -25px;
+  transition: height 0.3s ease, margin-top 0.3s ease;
+}
+@media (min-width: 768px) {
+  .wave-svg {
+    height: 80px;
+  }
+  .wave-svg-2 {
+    height: 60px;
+    margin-top: -40px;
+  }
+}
